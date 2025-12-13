@@ -6,17 +6,16 @@ namespace Web_Programlama_Projesi.Models
     {
         public int ServiceId { get; set; }
 
-        [Required]
         [Display(Name = "Hizmet Adı")]
-        public string ServiceName { get; set; } // Fitness, Pilates vb.
+        public string ServiceName { get; set; }
+
+        [Display(Name = "Açıklama")]
+        public string? Description { get; set; } // ✨ YENİ EKLENEN KISIM (Boş bırakılabilir olsun diye ?)
 
         [Display(Name = "Süre (Dakika)")]
         public int Duration { get; set; }
 
-        [Display(Name = "Ücret")]
+        [Display(Name = "Ücret (TL)")]
         public decimal Price { get; set; }
-
-        [Display(Name = "Açıklama")]
-        public string? Description { get; set; }
     }
 }

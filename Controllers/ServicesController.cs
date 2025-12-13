@@ -12,6 +12,11 @@ namespace Web_Programlama_Projesi.Controllers
 {
     public class ServicesController : Controller
     {
+        // Sabit Hizmet Listesi
+        private readonly List<string> _serviceTypes = new List<string>
+{
+    "Fitness", "Yoga", "Pilates", "Crossfit", "Yüzme", "Boks", "Kick Boks", "Zumba", "Spinning"
+};
         private readonly ApplicationDbContext _context;
 
         public ServicesController(ApplicationDbContext context)
@@ -46,6 +51,8 @@ namespace Web_Programlama_Projesi.Controllers
         // GET: Services/Create
         public IActionResult Create()
         {
+            // View tarafında Dropdown'ı doldurmak için listeyi gönderiyoruz
+            ViewBag.ServiceTypes = new SelectList(_serviceTypes);
             return View();
         }
 
@@ -54,7 +61,7 @@ namespace Web_Programlama_Projesi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ServiceId,ServiceName,Duration,Price,Description")] Service service)
+        public async Task<IActionResult> Create([Bind("ServiceId,ServiceName,Description,Duration,Price")] Service service)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +93,7 @@ namespace Web_Programlama_Projesi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,ServiceName,Duration,Price,Description")] Service service)
+        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,ServiceName,Description,Duration,Price")] Service service)
         {
             if (id != service.ServiceId)
             {
@@ -152,6 +159,17 @@ namespace Web_Programlama_Projesi.Controllers
         private bool ServiceExists(int id)
         {
             return _context.Services.Any(e => e.ServiceId == id);
+        }
+        // AJAX: Seçilen uzmanlığa göre hocaları getirir
+        [HttpGet]
+        public JsonResult GetTrainersBySpecialization(string specialization)
+        {
+            var trainers = _context.Trainers
+                .Where(t => t.Specialization == specialization)
+                .Select(t => new { t.FullName }) // Sadece ismini almamız yeterli
+                .ToList();
+
+            return Json(trainers);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Web_Programlama_Projesi.Models
         public string Specialization { get; set; } // Örn: Yoga, Fitness, Pilates
 
         [Display(Name = "Biyografi")]
-        public string? Bio { get; set; }
+        public string? Biography { get; set; } // Soru işareti (?) boş geçilebilir demek
 
         // Çalışma saatleri (Basitlik için string tutabiliriz örn: "09:00 - 18:00")
         [Display(Name = "Çalışma Saatleri")]

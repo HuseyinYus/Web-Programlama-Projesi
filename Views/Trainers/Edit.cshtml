@@ -1,49 +1,95 @@
 ﻿@model Web_Programlama_Projesi.Models.Trainer
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Antrenör Düzenle";
 }
 
-<h1>Edit</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
 
-<h4>Trainer</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="TrainerId" />
-            <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <div class="card-header bg-warning bg-gradient text-dark p-4 text-center border-0">
+                    <div class="mb-2">
+                        <i class="fa-solid fa-user-pen fa-3x"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Bilgileri Güncelle</h3>
+                    <p class="mb-0 opacity-75 small">Eğitmen bilgilerini aşağıdan düzenleyebilirsiniz.</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4 rounded-3 small"></div>
+
+                        <input type="hidden" asp-for="TrainerId" />
+
+                        <div class="mb-4">
+                            <label asp-for="FullName" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-solid fa-signature me-2 text-warning"></i>Ad Soyad
+                            </label>
+                            <input asp-for="FullName" class="form-control form-control-lg rounded-pill bg-light border-0 shadow-sm ps-4" />
+                            <span asp-validation-for="FullName" class="text-danger small ps-3"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Specialization" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-solid fa-certificate me-2 text-warning"></i>Uzmanlık
+                            </label>
+
+                            <select asp-for="Specialization" class="form-select form-select-lg rounded-pill bg-light border-0 shadow-sm ps-4" asp-items="ViewBag.Branches">
+                                <option value="" disabled>Branş Seçiniz...</option>
+                            </select>
+
+                            <span asp-validation-for="Specialization" class="text-danger small ps-3"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="WorkingHours" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-regular fa-clock me-2 text-warning"></i>Çalışma Saatleri
+                            </label>
+                            <input asp-for="WorkingHours" class="form-control form-control-lg rounded-pill bg-light border-0 shadow-sm ps-4" />
+                            <span asp-validation-for="WorkingHours" class="text-danger small ps-3"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Biography" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-solid fa-align-left me-2 text-warning"></i>Biyografi
+                            </label>
+                            <textarea asp-for="Biography" class="form-control rounded-4 bg-light border-0 shadow-sm ps-4 py-3" rows="4"></textarea>
+                            <span asp-validation-for="Biography" class="text-danger small ps-3"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-5">
+                            <button type="submit" class="btn btn-warning btn-lg rounded-pill shadow-sm fw-bold hover-scale text-dark">
+                                <i class="fa-solid fa-check me-2"></i> Değişiklikleri Kaydet
+                            </button>
+                            <a asp-action="Index" class="btn btn-light btn-lg rounded-pill text-muted hover-scale">
+                                Vazgeç
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Specialization" class="control-label"></label>
-                <input asp-for="Specialization" class="form-control" />
-                <span asp-validation-for="Specialization" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Bio" class="control-label"></label>
-                <input asp-for="Bio" class="form-control" />
-                <span asp-validation-for="Bio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WorkingHours" class="control-label"></label>
-                <input asp-for="WorkingHours" class="form-control" />
-                <span asp-validation-for="WorkingHours" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<style>
+    .ls-1 {
+        letter-spacing: 1px;
+    }
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.25); /* Sarı odak halkası */
+        background-color: #fff;
+    }
+
+    .hover-scale {
+        transition: transform 0.2s;
+    }
+
+        .hover-scale:hover {
+            transform: translateY(-2px);
+        }
+</style>

@@ -4,58 +4,66 @@
     ViewData["Title"] = "Hizmetlerimiz";
 }
 
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h1 class="fw-bold text-primary">Sunduğumuz Hizmetler</h1>
-        <p class="text-muted" style="max-width: 600px; margin: 0 auto;">
-            Sağlıklı bir yaşam için ihtiyacınız olan tüm profesyonel çözümler tek bir çatı altında.
+<div class="bg-primary bg-gradient text-white py-5 mb-5 rounded-bottom-5 shadow-sm">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">Hizmetlerimiz & Fiyatlar</h1>
+        <p class="lead opacity-75 mx-auto" style="max-width: 700px;">
+            Size özel antrenman programları, profesyonel ekipmanlar ve uzman kadromuzla hedeflerinize ulaşın.
         </p>
 
-        @if (User.IsInRole("Admin"))
+        @if (User.IsInRole("Admin") || User.Identity?.Name == "g231210022@sakarya.edu.tr")
         {
-            <a asp-action="Create" class="btn btn-success btn-lg shadow-sm mt-4 rounded-pill px-4">
-                <i class="fa-solid fa-plus"></i> Yeni Hizmet Ekle
+            <a asp-action="Create" class="btn btn-light text-primary fw-bold rounded-pill px-4 mt-3 shadow-sm hover-scale">
+                <i class="fa-solid fa-plus me-2"></i>Yeni Hizmet Ekle
             </a>
         }
     </div>
+</div>
 
-    <div class="row g-4">
+<div class="container pb-5">
+
+    <div class="row g-4 justify-content-center">
         @foreach (var item in Model)
         {
-            <div class="col-md-4 col-sm-6">
-                <div class="card h-100 border-0 shadow-sm service-card text-center p-4">
-                    <div class="card-body">
-                        <div class="icon-box mb-4 mx-auto bg-light text-primary rounded-circle d-flex align-items-center justify-content-center"
-                             style="width: 80px; height: 80px; font-size: 2rem; transition: all 0.3s ease;">
-                            <i class="fa-solid fa-bolt"></i>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden service-card">
+
+                    <div class="bg-primary" style="height: 10px;"></div>
+
+                    <div class="card-body p-4 d-flex flex-column text-center">
+
+                        <h3 class="fw-bold text-dark mb-1">@item.ServiceName</h3>
+
+                        <div class="text-muted small mb-3">
+                            <i class="fa-regular fa-clock me-1 text-warning"></i> @item.Duration Dakika / Seans
                         </div>
 
-                        <h4 class="card-title fw-bold text-dark">@item.ServiceName</h4>
-
-                        <div class="d-flex justify-content-center my-3">
-                            <span style="width: 50px; height: 3px; background: linear-gradient(90deg, #6a11cb, #2575fc); border-radius: 5px;"></span>
+                        <div class="display-6 fw-bold text-primary mb-4">
+                            @item.Price.ToString("C0")
                         </div>
 
-                        <p class="card-text text-muted">
-                            Bu hizmetimizle hedeflerinize daha hızlı ulaşın. Profesyonel ekipman ve uzman desteği sizi bekliyor.
-                        </p>
+                        <div class="bg-light rounded-3 p-3 mb-4 flex-grow-1 text-start">
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                <p class="mb-0 text-secondary small">
+                                    <i class="fa-solid fa-circle-info me-2 text-primary opacity-50"></i>
+                                    @item.Description
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="mb-0 text-muted small fst-italic text-center">Detaylı açıklama eklenmemiş.</p>
+                            }
+                        </div>
 
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Admin") || User.Identity?.Name == "g231210022@sakarya.edu.tr")
                         {
-                            <div class="mt-4 pt-3 border-top d-flex justify-content-center gap-2">
-                                <a asp-action="Edit" asp-route-id="@item.ServiceId" class="btn btn-outline-warning btn-sm rounded-pill px-3">
+                            <div class="d-flex justify-content-center gap-2 border-top pt-3">
+                                <a asp-action="Edit" asp-route-id="@item.ServiceId" class="btn btn-sm btn-outline-warning rounded-pill px-3">
                                     <i class="fa-solid fa-pen"></i> Düzenle
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.ServiceId" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                <a asp-action="Delete" asp-route-id="@item.ServiceId" class="btn btn-sm btn-outline-danger rounded-pill px-3">
                                     <i class="fa-solid fa-trash"></i> Sil
-                                </a>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="mt-4">
-                                <a asp-controller="Appointments" asp-action="Create" class="btn btn-primary btn-sm rounded-pill px-4 w-100">
-                                    Randevu Al <i class="fa-solid fa-arrow-right ms-1"></i>
                                 </a>
                             </div>
                         }
@@ -64,21 +72,32 @@
             </div>
         }
     </div>
+
+    <div class="text-center mt-5 pt-4 border-top">
+        <h3 class="fw-bold text-dark">Hemen Başlamaya Hazır Mısın?</h3>
+        <p class="text-muted">Size uygun programı seçtiyseniz, takvimden yerinizi ayırtın.</p>
+        <a asp-controller="Appointments" asp-action="Create" class="btn btn-primary btn-lg rounded-pill px-5 shadow hover-scale">
+            <i class="fa-regular fa-calendar-check me-2"></i> Randevu Oluştur
+        </a>
+    </div>
+
 </div>
 
 <style>
+    .hover-scale {
+        transition: transform 0.2s ease;
+    }
+
+        .hover-scale:hover {
+            transform: translateY(-3px);
+        }
+
     .service-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.15) !important;
         }
-            /* Kartın üzerine gelince ikonu renklendir */
-            .service-card:hover .icon-box {
-                background: linear-gradient(135deg, #6a11cb, #2575fc) !important;
-                color: white !important;
-                transform: scale(1.1);
-            }
 </style>

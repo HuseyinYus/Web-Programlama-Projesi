@@ -13,12 +13,31 @@
                         <i class="fa-regular fa-calendar-plus fa-3x"></i>
                     </div>
                     <h3 class="fw-bold mb-1">Randevu Oluştur</h3>
-                    <p class="mb-0 opacity-75 small">Kendiniz için en uygun zamanı planlayın.</p>
+                    <p class="mb-0 opacity-75 small">Lütfen önce almak istediğiniz hizmeti seçiniz.</p>
                 </div>
 
                 <div class="card-body p-4 p-md-5 bg-white">
                     <form asp-action="Create">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4 rounded-3 text-start small" role="alert"></div>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4 rounded-3 small"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="ServiceId" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-solid fa-dumbbell me-2 text-primary"></i>Hizmet Türü
+                            </label>
+                            <select asp-for="ServiceId" id="ServiceList" class="form-select form-select-lg rounded-pill bg-light border-0 shadow-sm ps-4" asp-items="ViewBag.ServiceId">
+                                <option value="" disabled selected>Önce hizmet seçiniz...</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="TrainerId" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-solid fa-user-tie me-2 text-primary"></i>Antrenör
+                            </label>
+                            <select asp-for="TrainerId" id="TrainerList" class="form-select form-select-lg rounded-pill bg-light border-0 shadow-sm ps-4" disabled>
+                                <option value="" disabled selected>Hizmete uygun antrenörler...</option>
+                            </select>
+                            <span class="text-muted small ms-3 fst-italic" id="trainer-hint">* Sadece seçilen branştaki hocalar listelenir.</span>
+                        </div>
 
                         <div class="mb-4">
                             <label asp-for="Date" class="form-label fw-bold text-secondary small text-uppercase ls-1">
@@ -36,24 +55,6 @@
                             <span asp-validation-for="Time" class="text-danger small ps-3"></span>
                         </div>
 
-                        <div class="mb-4">
-                            <label asp-for="TrainerId" class="form-label fw-bold text-secondary small text-uppercase ls-1">
-                                <i class="fa-solid fa-user-tie me-2 text-primary"></i>Antrenör
-                            </label>
-                            <select asp-for="TrainerId" class="form-select form-select-lg rounded-pill bg-light border-0 shadow-sm ps-4" asp-items="ViewBag.TrainerId">
-                                <option value="" disabled selected>Bir eğitmen seçiniz...</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-4">
-                            <label asp-for="ServiceId" class="form-label fw-bold text-secondary small text-uppercase ls-1">
-                                <i class="fa-solid fa-dumbbell me-2 text-primary"></i>Hizmet
-                            </label>
-                            <select asp-for="ServiceId" class="form-select form-select-lg rounded-pill bg-light border-0 shadow-sm ps-4" asp-items="ViewBag.ServiceId">
-                                <option value="" disabled selected>Bir hizmet seçiniz...</option>
-                            </select>
-                        </div>
-
                         <div class="d-grid gap-2 mt-5">
                             <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm hover-effect fw-bold">
                                 <i class="fa-solid fa-check me-2"></i> Randevuyu Onayla
@@ -69,19 +70,63 @@
     </div>
 </div>
 
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Hizmet kutusu (ServiceList) değiştiğinde çalışacak fonksiyon
+            $("#ServiceList").change(function () {
+                var serviceId = $(this).val(); // Seçilen hizmetin ID'sini al
+                var trainerSelect = $("#TrainerList"); // Antrenör kutusunu seç
+
+                // Antrenör kutusunu temizle ve "Yükleniyor..." yaz
+                trainerSelect.empty();
+                trainerSelect.append('<option value="" disabled selected>Yükleniyor...</option>');
+                trainerSelect.prop("disabled", true); // Geçici olarak kilitle
+
+                // Backend'e gidip hocaları sor (AJAX)
+                $.ajax({
+                    url: '/Appointments/GetTrainersByService',
+                    type: 'GET',
+                    data: { serviceId: serviceId },
+                    success: function (response) {
+                        trainerSelect.empty(); // Kutuyu tekrar temizle
+
+                        if (response.length > 0) {
+                            // Gelen hocaları kutuya ekle
+                            trainerSelect.append('<option value="" disabled selected>Bir eğitmen seçiniz...</option>');
+                            $.each(response, function (i, item) {
+                                trainerSelect.append($('<option>').val(item.value).text(item.text));
+                            });
+                            trainerSelect.prop("disabled", false); // Kilidi aç
+                            $("#trainer-hint").text("* Eğitmen seçimi yapabilirsiniz.");
+                        } else {
+                            // Eğer o branşta hoca yoksa
+                            trainerSelect.append('<option value="" disabled selected>Bu hizmet için uygun eğitmen bulunamadı.</option>');
+                             $("#trainer-hint").text("* Bu branşta kayıtlı hoca yok.");
+                        }
+                    },
+                    error: function () {
+                        alert("Eğitmenler getirilirken bir hata oluştu.");
+                    }
+                });
+            });
+        });
+    </script>
+}
+
 <style>
-    .ls-1 { letter-spacing: 1px; } /* Etiketleri biraz genişlet */
+    .ls-1 {
+        letter-spacing: 1px;
+    }
 
     .form-control:focus, .form-select:focus {
         background-color: #fff;
-        box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.1); /* Odaklanınca mor halka */
+        box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.1);
     }
 
-    /* Buton üzerine gelince hafif büyüme efekti */
-    .hover-effect {
-        transition: transform 0.2s ease;
-    }
     .hover-effect:hover {
         transform: translateY(-2px);
+        transition: transform 0.2s ease;
     }
 </style>

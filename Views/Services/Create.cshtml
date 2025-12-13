@@ -1,48 +1,146 @@
 ﻿@model Web_Programlama_Projesi.Models.Service
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Yeni Hizmet Ekle";
 }
 
-<h1>Create</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
 
-<h4>Service</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ServiceName" class="control-label"></label>
-                <input asp-for="ServiceName" class="form-control" />
-                <span asp-validation-for="ServiceName" class="text-danger"></span>
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-success bg-gradient text-white text-center p-4 border-0">
+                    <i class="fa-solid fa-layer-group fa-3x mb-2"></i>
+                    <h3 class="fw-bold mb-0">Hizmet Tanımla</h3>
+                    <p class="mb-0 opacity-75 small">Listeden tür seçin ve detayları girin.</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form asp-action="Create">
+
+                        <div class="mb-4">
+                            <label asp-for="ServiceName" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-solid fa-list-check me-2 text-success"></i>Hizmet Türü
+                            </label>
+                            <select asp-for="ServiceName" id="ServiceName" class="form-select form-select-lg rounded-pill bg-light border-0 shadow-sm ps-4" asp-items="ViewBag.ServiceTypes">
+                                <option value="" disabled selected>Hizmet türünü seçiniz...</option>
+                            </select>
+                            <span asp-validation-for="ServiceName" class="text-danger small ps-3"></span>
+                        </div>
+
+                        <div id="trainerInfoBox" class="alert alert-info rounded-4 border-0 mb-4 d-none">
+                            <h6 class="fw-bold mb-2 small text-uppercase">
+                                <i class="fa-solid fa-users me-1"></i> Bu Branştaki Eğitmenler:
+                            </h6>
+                            <ul id="trainerList" class="mb-0 small ps-3">
+                            </ul>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-solid fa-align-left me-2 text-success"></i>Açıklama
+                            </label>
+                            <textarea asp-for="Description" class="form-control rounded-4 bg-light border-0 shadow-sm ps-4 py-3" rows="3" placeholder="Hizmet içeriği hakkında bilgi..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger small ps-3"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 mb-4">
+                                <label asp-for="Duration" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                    <i class="fa-regular fa-clock me-2 text-success"></i>Süre (Dk)
+                                </label>
+                                <input asp-for="Duration" type="number" class="form-control form-control-lg rounded-pill bg-light border-0 shadow-sm ps-4" placeholder="60" />
+                                <span asp-validation-for="Duration" class="text-danger small ps-3"></span>
+                            </div>
+                            <div class="col-6 mb-4">
+                                <label asp-for="Price" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                    <i class="fa-solid fa-tag me-2 text-success"></i>Ücret (TL)
+                                </label>
+                                <input asp-for="Price" type="number" class="form-control form-control-lg rounded-pill bg-light border-0 shadow-sm ps-4" placeholder="500" />
+                                <span asp-validation-for="Price" class="text-danger small ps-3"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm hover-scale">
+                                <i class="fa-solid fa-save me-2"></i> Hizmeti Kaydet
+                            </button>
+                            <a asp-action="Index" class="btn btn-light btn-lg rounded-pill text-muted hover-scale">
+                                Vazgeç
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Duration" class="control-label"></label>
-                <input asp-for="Duration" class="form-control" />
-                <span asp-validation-for="Duration" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Hizmet Türü Değişince Çalışır
+            $("#ServiceName").change(function () {
+                var selectedService = $(this).val();
+                var listContainer = $("#trainerList");
+                var infoBox = $("#trainerInfoBox");
+
+                // Kutuyu temizle
+                listContainer.empty();
+
+                if (!selectedService) {
+                    infoBox.addClass("d-none");
+                    return;
+                }
+
+                // AJAX İsteği At
+                $.ajax({
+                    url: '/Services/GetTrainersBySpecialization',
+                    type: 'GET',
+                    data: { specialization: selectedService },
+                    success: function (trainers) {
+                        infoBox.removeClass("d-none"); // Kutuyu göster
+
+                        if (trainers.length > 0) {
+                            // Hoca varsa listele
+                            $.each(trainers, function (i, trainer) {
+                                listContainer.append('<li class="text-dark">' + trainer.fullName + '</li>');
+                            });
+                            // Kutunun rengini Mavi yap (Bilgi)
+                            infoBox.removeClass("alert-warning").addClass("alert-info");
+                        } else {
+                            // Hoca yoksa uyar
+                            listContainer.append('<li class="text-danger fw-bold">Bu branşta kayıtlı eğitmen yok!</li>');
+                            listContainer.append('<li class="text-muted fst-italic">Önce bu alanda uzman bir eğitmen eklemeniz önerilir.</li>');
+                            // Kutunun rengini Sarı yap (Uyarı)
+                            infoBox.removeClass("alert-info").addClass("alert-warning");
+                        }
+                    },
+                    error: function () {
+                        console.log("Hata oluştu.");
+                    }
+                });
+            });
+        });
+    </script>
 }
+
+<style>
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.15); /* Yeşil halka */
+    }
+
+    .hover-scale {
+        transition: transform 0.2s;
+    }
+
+        .hover-scale:hover {
+            transform: translateY(-2px);
+        }
+</style>

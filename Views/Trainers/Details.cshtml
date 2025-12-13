@@ -1,42 +1,80 @@
 ﻿@model Web_Programlama_Projesi.Models.Trainer
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Antrenör Detayı";
 }
 
-<h1>Details</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-<div>
-    <h4>Trainer</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FullName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Specialization)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Specialization)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Bio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Bio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.WorkingHours)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.WorkingHours)
-        </dd>
-    </dl>
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <div class="card-header bg-primary bg-gradient text-white text-center py-5 border-0 position-relative">
+                    <div class="mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle shadow-sm" style="width: 120px; height: 120px;">
+                            <i class="fa-solid fa-user-tie fa-4x text-primary"></i>
+                        </div>
+                    </div>
+                    <h2 class="fw-bold mb-1">@Model.FullName</h2>
+                    <span class="badge bg-warning text-dark rounded-pill px-3 py-2 fs-6 mt-2 shadow-sm">
+                        <i class="fa-solid fa-certificate me-1"></i> @Model.Specialization
+                    </span>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-4 h-100 border border-light">
+                                <h6 class="text-muted text-uppercase small fw-bold mb-3">
+                                    <i class="fa-regular fa-clock me-2 text-primary"></i>Çalışma Saatleri
+                                </h6>
+                                <p class="fs-5 fw-semibold text-dark mb-0">@Model.WorkingHours</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-4 h-100 border border-light">
+                                <h6 class="text-muted text-uppercase small fw-bold mb-3">
+                                    <i class="fa-solid fa-circle-info me-2 text-info"></i>Hakkında
+                                </h6>
+                                <p class="text-secondary mb-0">
+                                    @(string.IsNullOrEmpty(Model.Biography) ? "Bu eğitmen için henüz biyografi eklenmemiş." : Model.Biography)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-5 opacity-10">
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-action="Index" class="btn btn-light btn-lg rounded-pill px-4 shadow-sm hover-scale">
+                            <i class="fa-solid fa-arrow-left me-2"></i> Listeye Dön
+                        </a>
+
+                        @if (User.IsInRole("Admin") || User.Identity?.Name == "g231210022@sakarya.edu.tr")
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.TrainerId" class="btn btn-warning btn-lg rounded-pill px-4 shadow-sm hover-scale">
+                                <i class="fa-solid fa-pen-to-square me-2"></i> Bilgileri Düzenle
+                            </a>
+                        }
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.TrainerId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<style>
+    .hover-scale {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .hover-scale:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+</style>

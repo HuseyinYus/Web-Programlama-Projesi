@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Web_Programlama_Projesi.Data;
 using Web_Programlama_Projesi.Models;
 
@@ -13,6 +14,11 @@ namespace Web_Programlama_Projesi.Controllers
     public class TrainersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        // Ortak Branş Listesi (ServicesController ile aynı olmalı)
+        private readonly List<string> _branches = new List<string>
+{
+    "Fitness", "Yoga", "Pilates", "Crossfit", "Yüzme", "Boks", "Kick Boks", "Zumba", "Spinning"
+};
 
         public TrainersController(ApplicationDbContext context)
         {
@@ -44,18 +50,33 @@ namespace Web_Programlama_Projesi.Controllers
         }
 
         // GET: Trainers/Create
+
+        // 1. Ekleme Sayfasını Göster (GET)
+        [Authorize] // Sadece giriş yapmış olmak yeterli, rolü içeride kontrol edeceğiz
         public IActionResult Create()
         {
+            // KONTROL: Eğer kullanıcı Admin DEĞİLSE VE E-postası seninki DEĞİLSE -> Erişim Engellendi
+            if (!User.IsInRole("Admin") && User.Identity?.Name != "g231210022@sakarya.edu.tr")
+            {
+                return Forbid(); // Veya return RedirectToAction("AccessDenied", "Account");
+            }
+
+            ViewBag.Branches = new SelectList(_branches);
             return View();
         }
 
-        // POST: Trainers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // 2. Veriyi Kaydet (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TrainerId,FullName,Specialization,Bio,WorkingHours")] Trainer trainer)
+        [Authorize]
+        public async Task<IActionResult> Create([Bind("TrainerId,FullName,Specialization,WorkingHours,Biography")] Trainer trainer)
         {
+            // KONTROL: POST işleminde de aynı güvenlik kontrolü şart
+            if (!User.IsInRole("Admin") && User.Identity?.Name != "g231210022@sakarya.edu.tr")
+            {
+                return Forbid();
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(trainer);
@@ -78,6 +99,7 @@ namespace Web_Programlama_Projesi.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Branches = new SelectList(_branches);
             return View(trainer);
         }
 

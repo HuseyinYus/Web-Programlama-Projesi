@@ -135,6 +135,32 @@ namespace Web_Programlama_Projesi.Controllers
             ViewData["ServiceId"] = new SelectList(_context.Services, "ServiceId", "ServiceName", appointment.ServiceId);
             return View(appointment);
         }
+        // ... Sınıfın içine uygun bir yere ekle ...
+
+        // AJAX Çağrısı İçin: Hizmet ID'sine göre uygun antrenörleri getirir
+        [HttpGet]
+        public JsonResult GetTrainersByService(int serviceId)
+        {
+            // 1. Önce seçilen hizmetin adını bulalım (Örn: "Pilates")
+            var service = _context.Services.Find(serviceId);
+
+            if (service == null)
+            {
+                return Json(new List<object>());
+            }
+
+            // 2. Uzmanlık alanı (Specialization) bu hizmetin adı ile aynı olan antrenörleri bulalım
+            var trainers = _context.Trainers
+                .Where(t => t.Specialization == service.ServiceName)
+                .Select(t => new
+                {
+                    value = t.TrainerId,
+                    text = t.FullName
+                })
+                .ToList();
+
+            return Json(trainers);
+        }
 
         // Diğer metodlar (Edit, Delete, Details) buranın altında standart olarak kalabilir veya
         // Scaffolding ile gelen kodları kullanabilirsin. Create ve Index en önemlileriydi.
