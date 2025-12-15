@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "AI Koç";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4>🏋️ Yapay Zeka Koçunuz</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="GetRecommendation" method="post">
+                        <div class="mb-3">
+                            <label>Yaşınız</label>
+                            <input type="number" name="yas" class="form-control" required value="@ViewBag.Yas" placeholder="Örn: 22">
+                        </div>
+                        <div class="mb-3">
+                            <label>Kilonuz (kg)</label>
+                            <input type="number" name="kilo" class="form-control" required value="@ViewBag.Kilo" placeholder="Örn: 75">
+                        </div>
+                        <div class="mb-3">
+                            <label>Boyunuz (cm)</label>
+                            <input type="number" name="boy" class="form-control" required value="@ViewBag.Boy" placeholder="Örn: 180">
+                        </div>
+                        <div class="mb-3">
+                            <label>Hedefiniz Nedir?</label>
+                            <select name="hedef" class="form-control">
+                                <option>Kilo Vermek</option>
+                                <option>Kas Yapmak</option>
+                                <option>Formu Korumak</option>
+                                <option>Enerjik Hissetmek</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            ✨ Tavsiye Al
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            @if (ViewBag.Result != null)
+            {
+                <div class="card shadow border-success">
+                    <div class="card-header bg-success text-white">
+                        <h4>🤖 Koçun Tavsiyesi</h4>
+                    </div>
+                    <div class="card-body bg-light">
+                        <p style="white-space: pre-line; font-size: 1.1em; line-height: 1.6;">
+                            @ViewBag.Result
+                        </p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    Bilgilerinizi girin, yapay zeka size özel program hazırlasın!
+                </div>
+            }
+        </div>
+    </div>
+</div>
