@@ -1,22 +1,94 @@
-html {
-  font-size: 14px;
-}
+/* --- MODERN & SAMÝMÝ TASARIM --- */
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+:root {
+    --primary-color: #6a11cb;
+    --secondary-color: #2575fc;
+    --accent-color: #ff6b6b;
+    --bg-color: #f4f7f6;
+    --text-color: #2d3436;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Navbar (Menü) Tasarýmý */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand, .nav-link {
+    color: #fff !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+    .nav-link:hover {
+        color: #ffd166 !important; /* Fare üzerine gelince sarýmsý olsun */
+        transform: translateY(-2px);
+    }
+
+/* Kartlar (Card) - Yuvarlak ve Gölgeli */
+.card {
+    border: none;
+    border-radius: 20px; /* Yuvarlak köþeler */
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Yumuþak gölge */
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+    .card:hover {
+        transform: translateY(-5px); /* Üzerine gelince havaya kalksýn */
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: bold;
+    color: var(--primary-color);
+    padding: 1.5rem;
+}
+
+/* Butonlar - Modern Gradient */
+.btn-primary {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    border-radius: 50px; /* Tam yuvarlak buton */
+    padding: 10px 25px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+    transition: all 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
+    }
+
+/* Form Alanlarý */
+.form-control, .form-select {
+    border-radius: 15px;
+    padding: 12px 20px;
+    border: 1px solid #e0e0e0;
+    background-color: #fcfcfc;
+}
+
+    .form-control:focus {
+        box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.1);
+        border-color: var(--primary-color);
+    }
+
+/* Tablolar */
+.table thead th {
+    background-color: transparent;
+    border-bottom: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 600;
 }
