@@ -1,53 +1,74 @@
 ﻿@model IEnumerable<Web_Programlama_Projesi.Models.Trainer>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Antrenörlerimiz";
 }
 
-<h1>Index</h1>
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary">Profesyonel Eğitmenler</h1>
+        <p class="text-muted">Hedeflerinize ulaşmanız için yanınızda olan uzman kadromuzla tanışın.</p>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Specialization)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WorkingHours)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Specialization)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkingHours)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TrainerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TrainerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TrainerId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-success btn-lg shadow-sm mt-3">
+                <i class="fa-solid fa-plus"></i> Yeni Antrenör Ekle
+            </a>
+        }
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-3 hover-animate">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 100px; height: 100px;">
+                                <i class="fa-solid fa-user-tie fa-3x text-primary"></i>
+                            </div>
+                        </div>
+
+                        <h4 class="card-title fw-bold">@item.FullName</h4>
+                        <span class="badge bg-primary bg-gradient rounded-pill px-3 py-2 mb-3">
+                            @item.Specialization
+                        </span>
+
+                        <p class="card-text text-muted mt-2">
+                            <i class="fa-regular fa-clock text-warning me-2"></i> @item.WorkingHours
+                        </p>
+
+                        <hr class="my-4" style="opacity: 0.1;">
+
+                        <div class="d-flex justify-content-center gap-2">
+                            <a asp-action="Details" asp-route-id="@item.TrainerId" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                <i class="fa-solid fa-circle-info"></i> Detay
+                            </a>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.TrainerId" class="btn btn-outline-warning btn-sm rounded-pill px-3">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.TrainerId" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .hover-animate {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .hover-animate:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.15) !important;
+        }
+</style>
