@@ -1,53 +1,84 @@
 ﻿@model IEnumerable<Web_Programlama_Projesi.Models.Service>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Hizmetlerimiz";
 }
 
-<h1>Index</h1>
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary">Sunduğumuz Hizmetler</h1>
+        <p class="text-muted" style="max-width: 600px; margin: 0 auto;">
+            Sağlıklı bir yaşam için ihtiyacınız olan tüm profesyonel çözümler tek bir çatı altında.
+        </p>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ServiceName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Duration)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ServiceName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ServiceId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ServiceId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ServiceId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-success btn-lg shadow-sm mt-4 rounded-pill px-4">
+                <i class="fa-solid fa-plus"></i> Yeni Hizmet Ekle
+            </a>
+        }
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm service-card text-center p-4">
+                    <div class="card-body">
+                        <div class="icon-box mb-4 mx-auto bg-light text-primary rounded-circle d-flex align-items-center justify-content-center"
+                             style="width: 80px; height: 80px; font-size: 2rem; transition: all 0.3s ease;">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+
+                        <h4 class="card-title fw-bold text-dark">@item.ServiceName</h4>
+
+                        <div class="d-flex justify-content-center my-3">
+                            <span style="width: 50px; height: 3px; background: linear-gradient(90deg, #6a11cb, #2575fc); border-radius: 5px;"></span>
+                        </div>
+
+                        <p class="card-text text-muted">
+                            Bu hizmetimizle hedeflerinize daha hızlı ulaşın. Profesyonel ekipman ve uzman desteği sizi bekliyor.
+                        </p>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="mt-4 pt-3 border-top d-flex justify-content-center gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.ServiceId" class="btn btn-outline-warning btn-sm rounded-pill px-3">
+                                    <i class="fa-solid fa-pen"></i> Düzenle
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.ServiceId" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                    <i class="fa-solid fa-trash"></i> Sil
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mt-4">
+                                <a asp-controller="Appointments" asp-action="Create" class="btn btn-primary btn-sm rounded-pill px-4 w-100">
+                                    Randevu Al <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .service-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+            /* Kartın üzerine gelince ikonu renklendir */
+            .service-card:hover .icon-box {
+                background: linear-gradient(135deg, #6a11cb, #2575fc) !important;
+                color: white !important;
+                transform: scale(1.1);
+            }
+</style>
