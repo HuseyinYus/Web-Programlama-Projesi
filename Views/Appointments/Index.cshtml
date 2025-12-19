@@ -1,65 +1,113 @@
 ﻿@model IEnumerable<Web_Programlama_Projesi.Models.Appointment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Randevularım";
 }
 
-<h1>Index</h1>
+<div class="container py-5">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Time)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Trainer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Service)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Time)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Member.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Trainer.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Service.ServiceName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AppointmentId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary mb-0">
+                <i class="fa-regular fa-calendar-check me-2"></i>Randevular
+            </h2>
+            <p class="text-muted small mb-0">Planlanmış egzersiz takviminizi buradan yönetebilirsiniz.</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary rounded-pill shadow-sm px-4">
+            <i class="fa-solid fa-plus"></i> Yeni Randevu Al
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="py-3 ps-4 text-muted border-0">Tarih & Saat</th>
+                                <th class="py-3 text-muted border-0">Antrenör</th>
+                                <th class="py-3 text-muted border-0">Hizmet</th>
+                                <th class="py-3 text-muted border-0">Durum</th>
+                                <th class="py-3 text-end pe-4 text-muted border-0">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold text-dark">
+                                                <i class="fa-regular fa-calendar me-1 text-primary"></i> @item.Date.ToString("dd MMMM yyyy")
+                                            </span>
+                                            <span class="text-muted small">
+                                                <i class="fa-regular fa-clock me-1 text-warning"></i> @item.Time.ToString(@"hh\:mm")
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-light rounded-circle p-2 me-2 text-primary">
+                                                <i class="fa-solid fa-user-tie"></i>
+                                            </div>
+                                            <span class="fw-semibold">@Html.DisplayFor(modelItem => item.Trainer.FullName)</span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill">
+                                            @Html.DisplayFor(modelItem => item.Service.ServiceName)
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @{
+                                            var statusColor = item.Status == "Onaylandı" ? "success" :
+                                            (item.Status == "İptal" ? "danger" : "warning");
+                                            var statusIcon = item.Status == "Onaylandı" ? "fa-check" :
+                                            (item.Status == "İptal" ? "fa-xmark" : "fa-hourglass-half");
+                                        }
+                                        <span class="badge bg-@statusColor bg-gradient rounded-pill px-3 py-2">
+                                            <i class="fa-solid @statusIcon me-1"></i> @item.Status
+                                        </span>
+                                    </td>
+
+                                    <td class="text-end pe-4">
+                                        <div class="btn-group">
+                                            <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-sm btn-outline-secondary" title="Düzenle">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+                                            <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-sm btn-outline-info" title="Detay">
+                                                <i class="fa-solid fa-circle-info"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.AppointmentId" class="btn btn-sm btn-outline-danger" title="İptal Et / Sil">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="fa-regular fa-calendar-xmark fa-4x text-muted opacity-50"></i>
+                    </div>
+                    <h4 class="text-muted">Henüz hiç randevunuz yok.</h4>
+                    <p class="text-secondary mb-4">Kendiniz için bir iyilik yapın ve hemen antrenman planlayın!</p>
+                    <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
+                        İlk Randevuyu Oluştur
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
