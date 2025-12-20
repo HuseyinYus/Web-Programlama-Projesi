@@ -1,55 +1,87 @@
 ﻿@model Web_Programlama_Projesi.Models.Appointment
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Randevu Al";
 }
 
-<h1>Create</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary bg-gradient text-white p-4 text-center border-0">
+                    <div class="mb-2">
+                        <i class="fa-regular fa-calendar-plus fa-3x"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Randevu Oluştur</h3>
+                    <p class="mb-0 opacity-75 small">Kendiniz için en uygun zamanı planlayın.</p>
+                </div>
 
-<h4>Appointment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4 rounded-3 text-start small" role="alert"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Date" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-regular fa-calendar me-2 text-primary"></i>Tarih
+                            </label>
+                            <input asp-for="Date" type="date" class="form-control form-control-lg rounded-pill bg-light border-0 shadow-sm ps-4" />
+                            <span asp-validation-for="Date" class="text-danger small ps-3"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Time" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-regular fa-clock me-2 text-primary"></i>Saat
+                            </label>
+                            <input asp-for="Time" type="time" class="form-control form-control-lg rounded-pill bg-light border-0 shadow-sm ps-4" />
+                            <span asp-validation-for="Time" class="text-danger small ps-3"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="TrainerId" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-solid fa-user-tie me-2 text-primary"></i>Antrenör
+                            </label>
+                            <select asp-for="TrainerId" class="form-select form-select-lg rounded-pill bg-light border-0 shadow-sm ps-4" asp-items="ViewBag.TrainerId">
+                                <option value="" disabled selected>Bir eğitmen seçiniz...</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ServiceId" class="form-label fw-bold text-secondary small text-uppercase ls-1">
+                                <i class="fa-solid fa-dumbbell me-2 text-primary"></i>Hizmet
+                            </label>
+                            <select asp-for="ServiceId" class="form-select form-select-lg rounded-pill bg-light border-0 shadow-sm ps-4" asp-items="ViewBag.ServiceId">
+                                <option value="" disabled selected>Bir hizmet seçiniz...</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm hover-effect fw-bold">
+                                <i class="fa-solid fa-check me-2"></i> Randevuyu Onayla
+                            </button>
+                            <a asp-action="Index" class="btn btn-light btn-lg rounded-pill text-muted hover-effect">
+                                Vazgeç
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Time" class="control-label"></label>
-                <input asp-for="Time" class="form-control" />
-                <span asp-validation-for="Time" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MemberId" class="control-label"></label>
-                <select asp-for="MemberId" class ="form-control" asp-items="ViewBag.MemberId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TrainerId" class="control-label">Antrenör Seç</label>
-                <select asp-for="TrainerId" class="form-control" asp-items="ViewBag.TrainerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ServiceId" class="control-label">Hizmet Seç</label>
-                <select asp-for="ServiceId" class="form-control" asp-items="ViewBag.ServiceId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<style>
+    .ls-1 { letter-spacing: 1px; } /* Etiketleri biraz genişlet */
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    .form-control:focus, .form-select:focus {
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.1); /* Odaklanınca mor halka */
+    }
+
+    /* Buton üzerine gelince hafif büyüme efekti */
+    .hover-effect {
+        transition: transform 0.2s ease;
+    }
+    .hover-effect:hover {
+        transform: translateY(-2px);
+    }
+</style>

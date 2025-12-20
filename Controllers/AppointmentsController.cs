@@ -53,6 +53,36 @@ namespace Web_Programlama_Projesi.Controllers
             return View();
         }
 
+        // RANDEVU ONAYLA (Sadece Admin)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            appointment.Status = "Onaylandı"; // Durumu güncelle
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // RANDEVU İPTAL ET / REDDET (Sadece Admin)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            appointment.Status = "İptal Edildi"; // Durumu güncelle
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         // POST: Appointments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
